@@ -79,8 +79,10 @@ Testowane przypadki:
 
 ## Wykryte problemy
 
-1. API akceptuje `title` jako integer zamiast string
-2. API akceptuje `body` jako integer zamiast string
+1. API akceptuje "title" jako integer zamiast string
+2. API akceptuje "body" jako integer zamiast string
+3. API akceptuje "userId" jako string zamiast integer
+4. API przyjmuje "null" jako wartości dla pól "title", "body", "userId"
 
 ---
 
