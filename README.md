@@ -14,6 +14,7 @@ Celem było sprawdzenie działania podstawowych operacji CRUD oraz weryfikacja p
 * Postman
 * JavaScript (testy w Postmanie)
 * JSON
+* Jira (raportowanie)
 
 ---
 
