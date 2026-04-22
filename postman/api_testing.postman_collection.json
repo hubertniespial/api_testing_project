@@ -17,20 +17,85 @@
             {
               "listen": "test",
               "script": {
-                "type": "text/javascript",
                 "exec": [
+                  "const res = pm.response.json();",
+                  "",
                   "pm.test(\"Status code is 200\", function () {",
                   "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has title\", function () {",
+                  "    pm.expect(res.title).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "pm.test(\"Response has body\", function () {",
+                  "    pm.expect(res.body).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "",
+                  "pm.test(\"Response has userId\", function () {",
+                  "    pm.expect(res.userId).to.exist;",
+                  "});",
+                  "",
+                  "pm.test(\"Response has id\", function () {",
+                  "    pm.expect(res.id).to.exist;",
+                  "});",
+                  "",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "",
+                  "pm.test(\"userId is an integer\", function () {",
+                  "    pm.expect(Number.isInteger(res.userId)).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test(\"id is an integer\", function () {",
+                  "    pm.expect(Number.isInteger(res.id)).to.be.true;",
                   "});"
-                ]
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "packages": {},
+                "type": "text/javascript"
               }
             }
           ],
           "request": {
             "method": "GET",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": ""
+              "raw": "https://jsonplaceholder.typicode.com/posts/1",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "99",
+                  "disabled": true
+                }
+              ]
             },
             "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
           },
@@ -38,17 +103,113 @@
         },
         {
           "name": "Get data with incorrect \"id\" (@ sign)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const resText = pm.response.text();\r",
+                  "\r",
+                  "pm.test(\"Status code is 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response body is empty or minimal\", function () {\r",
+                  "    pm.expect(resText.length).to.be.below(10);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 200ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts/@",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts",
+                "@"
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "Get data with blank \"id\"",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response is an array\", function () {\r",
+                  "    pm.expect(res).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has 100 posts\", function () {\r",
+                  "    pm.expect(res.length).to.eql(100);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Each post has required fields\", function () {\r",
+                  "    res.forEach(post => {\r",
+                  "        pm.expect(post.userId).to.exist;\r",
+                  "        pm.expect(post.id).to.exist;\r",
+                  "        pm.expect(post.title).to.be.a(\"string\").and.not.empty;\r",
+                  "        pm.expect(post.body).to.be.a(\"string\").and.not.empty;\r",
+                  "    });\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"userId and id are integers\", function () {\r",
+                  "    res.forEach(post => {\r",
+                  "        pm.expect(Number.isInteger(post.userId)).to.be.true;\r",
+                  "        pm.expect(Number.isInteger(post.id)).to.be.true;\r",
+                  "    });\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 200ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts/",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts",
+                ""
+              ]
+            }
           },
           "response": []
         }
@@ -59,57 +220,313 @@
       "item": [
         {
           "name": "Create post with correct data and structure",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has valid title\", function () {\r",
+                  "    pm.expect(res.title).to.be.a(\"string\").and.not.empty;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has valid body\", function () {\r",
+                  "    pm.expect(res.body).to.be.a(\"string\").and.not.empty;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has userId\", function () {\r",
+                  "    pm.expect(res.userId).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has id\", function () {\r",
+                  "    pm.expect(res.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 200ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"userId is an integer\", function () {\r",
+                  "    pm.expect(Number.isInteger(res.userId)).to.be.true;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"id is an integer\", function () {\r",
+                  "    pm.expect(Number.isInteger(res.id)).to.be.true;\r",
+                  "});\r",
+                  "pm.test(\"Check if userId is correct\", function () {\r",
+                  "    pm.expect(res.userId).to.eql(111);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
-            "method": "GET",
-            "header": []
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"userId\": 111,\r\n        \"id\": 101,\r\n        \"title\": \"sunt aut facere repellat provident occaecati excepturi optio reprehenderit\",\r\n        \"body\": \"quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto\"\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts"
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "Create post with blank response body",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response is an array\", function () {\r",
+                  "    pm.expect(res).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Array is not empty\", function () {\r",
+                  "    pm.expect(res.length).to.be.above(0);\r",
+                  "});\r",
+                  "\r",
+                  "if (res.length > 0) {\r",
+                  "    pm.test(\"Each post has valid structure\", function () {\r",
+                  "        res.forEach(post => {\r",
+                  "            pm.expect(post.userId).to.exist;\r",
+                  "            pm.expect(post.id).to.exist;\r",
+                  "            pm.expect(post.title).to.be.a(\"string\").and.not.empty;\r",
+                  "            pm.expect(post.body).to.be.a(\"string\").and.not.empty;\r",
+                  "\r",
+                  "            pm.expect(Number.isInteger(post.userId)).to.be.true;\r",
+                  "            pm.expect(Number.isInteger(post.id)).to.be.true;\r",
+                  "        });\r",
+                  "    });\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
-            "method": "GET",
-            "header": []
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts"
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "Create post with \"userId\" as a string",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();\r",
+                  "pm.test(\"Check if the response userId is an integer\", function () {\r",
+                  "    pm.expect(Number.isInteger(res.userId)).to.be.true;\r",
+                  "    });\r",
+                  "pm.test(\"Check if the response title is a string\", function () {\r",
+                  "    pm.expect(typeof res.title).to.equal(\"string\");\r",
+                  "});\r",
+                  "pm.test(\"Check if the response body is a string\", function () {\r",
+                  "    pm.expect(typeof res.body).to.equal(\"string\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
-            "method": "GET",
-            "header": []
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"userId\": \"111\",\r\n        \"title\": \"sunt aut facere repellat provident occaecati excepturi optio reprehenderit\",\r\n        \"body\": \"quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto\"\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts"
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "Create post with \"id\" as a string",
           "request": {
-            "method": "GET",
-            "header": []
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"id\": \"55\",\r\n        \"userId\": 111,\r\n        \"title\": \"sunt aut facere repellat provident occaecati excepturi optio reprehenderit\",\r\n        \"body\": \"quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto\"\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts"
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "Create post with \"title\" as an integer",
           "request": {
-            "method": "GET",
-            "header": []
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"userId\": 111,\r\n        \"title\": 66,\r\n        \"body\": \"quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto\"\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts"
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "Create post with \"body\" as an integer",
           "request": {
-            "method": "GET",
-            "header": []
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"userId\": 111,\r\n        \"title\": \"test\",\r\n        \"body\": 66\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts"
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "Create post with all fields as null",
           "request": {
-            "method": "GET",
-            "header": []
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"userId\": null,\r\n        \"title\": null,\r\n        \"body\": null\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts"
+              ]
+            }
           },
           "response": []
         }
@@ -120,17 +537,105 @@
       "item": [
         {
           "name": "Modify post with \"id\"  = 1 with correct data (PUT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();\r",
+                  "pm.test(\"Check if title is updated\", function () {\r",
+                  "    pm.expect(res.title).to.eql(\"test\");\r",
+                  "});\r",
+                  "pm.test(\"Check if body is updated\", function () {\r",
+                  "    pm.expect(res.body).to.eql(\"test\");\r",
+                  "    pm.test(\"Check if id is unchanged\", function () {\r",
+                  "        pm.expect(res.id).to.eql(1);\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
-            "method": "GET",
-            "header": []
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"userId\": 111,\r\n        \"title\": \"test\",\r\n        \"body\": \"test\"\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts/1",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts",
+                "1"
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "Modify post with \"id\"  = 1 with correct data (PATCH)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();\r",
+                  "pm.test(\"Check if title is updated\", function () {\r",
+                  "    pm.expect(res.title).to.eql(\"test\");\r",
+                  "});\r",
+                  "pm.test(\"Check if body is updated\", function () {\r",
+                  "    pm.expect(res.body).to.eql(\"test\");\r",
+                  "    pm.test(\"Check if id is unchanged\", function () {\r",
+                  "        pm.expect(res.id).to.eql(1);\r",
+                  "    });\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
-            "method": "GET",
-            "header": []
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"userId\": 111,\r\n        \"title\": \"test\",\r\n        \"body\": \"test\"\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts/1",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts",
+                "1"
+              ]
+            }
           },
           "response": []
         }
@@ -141,9 +646,42 @@
       "item": [
         {
           "name": "Deleting post with \"id\" = 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();\r",
+                  "pm.test(\"Status code is 200\", function() {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "pm.test(\"Status body is empty\", function () {\r",
+                  "    pm.expect(res).to.deep.equal({});\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
-            "method": "GET",
-            "header": []
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts/1",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts",
+                "1"
+              ]
+            }
           },
           "response": []
         }
