@@ -92,6 +92,8 @@ Testowane przypadki:
 <img width="1495" height="816" alt="image" src="https://github.com/user-attachments/assets/663b451b-9843-4b9c-a423-f7b5f5ee6972" />
 <img width="1495" height="816" alt="image" src="https://github.com/user-attachments/assets/530d338a-6954-4d31-a1fd-68ebbe96f6d6" />
 <img width="1495" height="816" alt="image" src="https://github.com/user-attachments/assets/d0c0d4db-7676-4f8c-ad3a-f78d81c160ce" />
+<img width="1495" height="852" alt="image" src="https://github.com/user-attachments/assets/92c026b4-d55e-4097-9ade-64361b06a333" />
+
 
 ---
 
